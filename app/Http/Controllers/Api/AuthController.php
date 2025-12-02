@@ -17,7 +17,7 @@ class AuthController extends Controller
     public function register(Request $request)
     {
         $request->validate([
-            'name' => 'required|string|max:255',
+            'name' => 'nullable|string|max:255',
             'email' => 'required|string|email|max:255|unique:users',
             'password' => 'required|string|min:8|confirmed',
             'latitude' => 'nullable|string',
@@ -27,7 +27,7 @@ class AuthController extends Controller
         $user = User::create([
             'name' => $request->name,
             'email' => $request->email,
-            'password' => Hash::make($request->password),
+            'password' => $request->password, // El modelo User se encargará de hashear la contraseña
             'latitude' => $request->latitude,
             'longitude' => $request->longitude,
             'role' => 'user', // Por defecto, los nuevos usuarios son 'user'
@@ -66,5 +66,21 @@ class AuthController extends Controller
         $request->user()->currentAccessToken()->delete();
 
         return response()->json(['message' => 'Logged out successfully'], 200);
+    }
+
+    public function update(Request $request)
+    {
+        $user = Auth::user();
+
+        $request->validate([
+            'name' => 'nullable|string|max:255',
+            'email' => 'required|string|email|max:255|unique:users,email,' . $user->id,
+            'latitude' => 'nullable|string',
+            'longitude' => 'nullable|string',
+        ]);
+
+        $user->update($request->only('name', 'email', 'latitude', 'longitude'));
+
+        return response()->json(['message' => 'User updated successfully', 'user' => $user], 200);
     }
 }
