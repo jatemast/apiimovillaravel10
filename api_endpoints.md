@@ -76,7 +76,43 @@ curl -X POST "http://127.0.0.1:8000/api/login" \
 
 ---
 
-### **4. Listar Todos los Libros (Usuarios y Administradores)**
+### **4. Actualizar Datos de Usuario (Cualquier Usuario Autenticado)**
+
+Este endpoint permite a un usuario autenticado actualizar su información personal (nombre, email, latitud, longitud). Reemplaza `YOUR_AUTH_TOKEN_HERE` con el token obtenido en el paso de login.
+
+```bash
+curl -X PUT "http://127.0.0.1:8000/api/user" \
+-H "Accept: application/json" \
+-H "Authorization: Bearer YOUR_AUTH_TOKEN_HERE" \
+-H "Content-Type: application/json" \
+-d '{
+    "name": "Nuevo Nombre de Usuario",
+    "email": "nuevo.email@example.com",
+    "latitude": "40.1234",
+    "longitude": "-74.5678"
+}'
+```
+
+**Respuesta esperada (ejemplo):**
+```json
+{
+    "message": "User updated successfully",
+    "user": {
+        "id": 1,
+        "name": "Nuevo Nombre de Usuario",
+        "email": "nuevo.email@example.com",
+        "email_verified_at": null,
+        "latitude": "40.1234",
+        "longitude": "-74.5678",
+        "created_at": "2023-10-27T10:00:00.000000Z",
+        "updated_at": "2023-10-27T11:00:00.000000Z"
+    }
+}
+```
+
+---
+
+### **5. Listar Todos los Libros (Usuarios y Administradores)**
 
 Cualquier usuario autenticado puede ver la lista de libros. Reemplaza `YOUR_AUTH_TOKEN_HERE` con el token obtenido en el paso de login.
 

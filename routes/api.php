@@ -25,6 +25,7 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::get('/user', function (Request $request) {
         return $request->user();
     });
+    Route::put('/user', [AuthController::class, 'update']);
 
     // Rutas para libros
     Route::get('/books', [BookController::class, 'index']);
@@ -38,7 +39,7 @@ Route::middleware('auth:sanctum')->group(function () {
         Route::delete('/books/{book}', [BookController::class, 'destroy']);
     });
 
-    // Ruta para simular compra de libros (solo para usuarios)
-    Route::middleware('role:user')->post('/books/{book}/purchase', [BookController::class, 'purchase']);
+    // Ruta para simular compra de libros (para cualquier usuario autenticado)
+    Route::post('/books/{book}/purchase', [BookController::class, 'purchase']);
 
 });
